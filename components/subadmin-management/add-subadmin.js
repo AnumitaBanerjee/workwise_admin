@@ -34,7 +34,8 @@ const AddSubadmin = () => {
                 /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im,
                 "please enter valid mobile number"
             )
-            .length(10)
+            .min(10)
+            .max(11)
             .required("mobile is required"),
         password: yup.string().required("Password field is required"),
         // .matches(/^(?=.*\d)(?=.*[A-Z]).{6,16}$/, "Password should be atleast 6 characters one UpperCase one Number"),

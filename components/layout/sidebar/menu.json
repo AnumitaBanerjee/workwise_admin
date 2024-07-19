@@ -115,6 +115,13 @@
         "class": "",
         "icon": "",
         "active": false
+      },
+      {
+        "title": "Client Management",
+        "link": "/client-management",
+        "class": "",
+        "icon": "",
+        "active": false
       }
     ]
   },

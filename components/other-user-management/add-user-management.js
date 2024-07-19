@@ -72,7 +72,8 @@ const AddOtherUserManagementComponent = () => {
                       /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im,
                       "please enter valid mobile number"
                     )
-                    .length(10)
+                    .min(10)
+                    .max(11)
                     .required("mobile is required"),
                   image: yup
                     .mixed()

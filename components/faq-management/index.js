@@ -5,6 +5,7 @@ import {
   handleDeleteVendorProfile,
   handleGetBannerList,
   handleGetFaqList,
+  handleDeleteFaq,
 } from "@/utils/services/faq-management";
 import ReactPaginate from "react-paginate";
 import { useRouter } from "next/router";
@@ -31,7 +32,7 @@ const FaqManagement = () => {
   };
 
   const submitDeleteBlog = () => {
-    handleDeleteBanner(id)
+    handleDeleteFaq(id)
       .then((res) => {
         toast(res.message);
         getFaqList();
@@ -48,7 +49,7 @@ const FaqManagement = () => {
 
   const handleUpdateBanner = (item) => {
     // localStorage.setItem("vendorUpdate", JSON.stringify(item));
-    router.push(`/banner-management/edit/${item.id}`);
+    router.push(`/faq-management/edit/${item.id}`);
   };
 
   useEffect(() => {
@@ -243,37 +244,6 @@ const FaqManagement = () => {
               data={submitDeleteBlog}
             />
             <ToastContainer />
-            {/* <nav aria-label="Page navigation example">
-              <ul class="pagination">
-                <li class="page-item">
-                  <a class="page-link" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                    <span class="sr-only">Previous</span>
-                  </a>
-                </li>
-                <li class="page-item">
-                  <a class="page-link" href="#">
-                    1
-                  </a>
-                </li>
-                <li class="page-item">
-                  <a class="page-link" href="#">
-                    2
-                  </a>
-                </li>
-                <li class="page-item">
-                  <a class="page-link" href="#">
-                    3
-                  </a>
-                </li>
-                <li class="page-item">
-                  <a class="page-link" href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                    <span class="sr-only">Next</span>
-                  </a>
-                </li>
-              </ul>
-            </nav> */}
           </div>
         </div>
       </section>

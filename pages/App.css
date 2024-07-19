@@ -15075,3 +15075,9 @@ margin-bottom: 15px;
 .product-content .product-variants{
   padding: 20px;
 }
+.vendor-list-row .card{
+  margin: 8px;
+} 
+.form-common-row .col-6, .col-4{
+  padding-bottom: 8px;
+}

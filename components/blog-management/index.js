@@ -2,13 +2,14 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
 import DeleteModal from '../modal/delete-modal';
+import ReactPaginate from "react-paginate";
 import { handleDeleteBlog, handleGetBlogList } from '@/utils/services/blog-management';
 
 const BlogManagement = () => {
     const router = useRouter();
     const [blogsList, setBlogsList] = useState([])
     const [limit, setlimit] = useState(10);
-    const [page, setpage] = useState(1);
+    const [page, setPage] = useState(1);
     const [totalPages, settotalPages] = useState(null);
     const [searchString, setSearchString] = useState('');
     const [showModal, setShowModal] = useState(false);
@@ -28,6 +29,9 @@ const BlogManagement = () => {
     const handleSearch = (e) => {
         setSearchString(e.target.value);
     }
+    const handlePageClick = (e) => {
+        setPage(e.selected + 1);
+    };
 
     const submitDeleteSection = () => {
         handleDeleteBlog(id)
@@ -49,7 +53,7 @@ const BlogManagement = () => {
     const getBlogsList = () => {
         handleGetBlogList(page, limit, searchString)
             .then((res) => {
-                settotalPages(Math.ceil(res.total_count / limit));
+                settotalPages(res.total_count);
                 setBlogsList(res.data);
             })
             .catch((error) => {
@@ -137,43 +141,18 @@ const BlogManagement = () => {
                             }
                         </tbody>
                     </table>
-                    <nav aria-label="Page navigation example">
-                        <ul className="pagination">
-                            {Array.from(Array(totalPages), (e, i) => {
-                                if (i + 1 === page) {
-                                    return (
-                                        <li className="active page-item" key={i + 1}>
-                                            <a
-                                                className="page-link"
-                                                href=""
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    setpage(i + 1);
-                                                }}
-                                            >
-                                                {i + 1}
-                                            </a>
-                                        </li>
-                                    );
-                                } else {
-                                    return (
-                                        <li className="page-item" key={i + 1}>
-                                            <a
-                                                className="page-link"
-                                                href=""
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    setpage(i + 1);
-                                                }}
-                                            >
-                                                {i + 1}
-                                            </a>
-                                        </li>
-                                    );
-                                }
-                            })}
-                        </ul>
-                    </nav>
+                    {Math.ceil(totalPages / 10) > 1 && (
+                        <ReactPaginate
+                            breakLabel="..."
+                            nextLabel={<i className="fa fa-angle-right"></i>}
+                            onPageChange={handlePageClick}
+                            pageRangeDisplayed={2}
+                            pageCount={Math.ceil(totalPages / 10)}
+                            previousLabel={<i className="fa fa-angle-left"></i>}
+                            renderOnZeroPageCount={null}
+                            className="pagination"
+                        />
+                    )}
                 </div>
             </section>
             <DeleteModal

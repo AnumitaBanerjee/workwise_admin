@@ -2,6 +2,7 @@ import { paymentHistoryAPI } from "@/utils/services/payment-history";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
+import ReactPaginate from "react-paginate";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Select from "react-select";
@@ -9,7 +10,7 @@ import Select from "react-select";
 const PaymentHistory = () => {
   const [paymentHistoryList, setPaymentHistoryList] = useState([]);
   const [limit, setlimit] = useState(10);
-  const [page, setpage] = useState(1);
+  const [page, setPage] = useState(1);
   const [totalPages, settotalPages] = useState(null);
   const [isExport, setIsExport] = useState(false);
   const [startDate, setStartDate] = useState(null);
@@ -46,6 +47,9 @@ const PaymentHistory = () => {
   const handlePaymentStatus = (option) => {
     setPaymentStatus(option);
   };
+  const handlePageClick = (e) => {
+    setPage(e.selected + 1);
+  };
 
   const handleSearch = (e) => {
     setSearchString(e.target.value);
@@ -62,7 +66,7 @@ const PaymentHistory = () => {
       ""
     )
       .then((res) => {
-        settotalPages(Math.ceil(res.total_count / limit));
+        settotalPages(res.total_count);
         setPaymentHistoryList(res.data);
       })
       .catch((error) => {
@@ -208,7 +212,7 @@ const PaymentHistory = () => {
                 })}
             </tbody>
           </table>
-          <nav aria-label="Page navigation example">
+          {/* <nav aria-label="Page navigation example">
             <ul className="pagination">
               {Array.from(Array(totalPages), (e, i) => {
                 if (i + 1 === page) {
@@ -244,7 +248,19 @@ const PaymentHistory = () => {
                 }
               })}
             </ul>
-          </nav>
+          </nav> */}
+          {Math.ceil(totalPages / 10) > 1 && (
+            <ReactPaginate
+              breakLabel="..."
+              nextLabel={<i className="fa fa-angle-right"></i>}
+              onPageChange={handlePageClick}
+              pageRangeDisplayed={2}
+              pageCount={Math.ceil(totalPages / 10)}
+              previousLabel={<i className="fa fa-angle-left"></i>}
+              renderOnZeroPageCount={null}
+              className="pagination"
+            />
+          )}
         </div>
       </section>
     </>

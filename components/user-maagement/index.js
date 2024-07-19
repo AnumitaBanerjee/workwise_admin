@@ -7,7 +7,7 @@ import {
   LinearScale,
   ArcElement,
   Tooltip,
-  Legend
+  Legend,
 } from "chart.js";
 import ManagementCard from "./management-card";
 
@@ -37,18 +37,18 @@ const UserManagement = () => {
           "#0B436A",
           "#FCC21F",
           "#5BACE4",
-          "#2C83C0"
+          "#2C83C0",
         ],
-        barThickness: 20
-      }
-    ]
+        barThickness: 20,
+      },
+    ],
   };
 
   const options = {
     plugins: {
       legend: {
-        display: false
-      }
+        display: false,
+      },
     },
 
     scales: {
@@ -56,8 +56,8 @@ const UserManagement = () => {
         // to remove the x-axis grid
         grid: {
           drawBorder: false,
-          display: false
-        }
+          display: false,
+        },
       },
 
       // to remove the y-axis labels
@@ -67,25 +67,25 @@ const UserManagement = () => {
         ticks: {
           stepSize: 30,
           display: false,
-          beginAtZero: true
-        }
+          beginAtZero: true,
+        },
         // to remove the y-axis grid
         // grid: {
         //   drawBorder: false,
         //   display: false,
         // },
-      }
-    }
+      },
+    },
   };
 
   const pyramidOptions = {
     legend: {
       horizontalAlign: "right",
       verticalAlign: "center",
-      reversed: true
+      reversed: true,
     },
     toolTip: {
-      enabled: true
+      enabled: true,
     },
     data: [
       {
@@ -101,10 +101,10 @@ const UserManagement = () => {
           { y: 4000, color: "#1A5F8F" },
           { y: 6000, color: "#2C83C0" },
           { y: 8000, color: "#5BACE4" },
-          { y: 10000, color: "#FCC21F" }
-        ]
-      }
-    ]
+          { y: 10000, color: "#FCC21F" },
+        ],
+      },
+    ],
   };
 
   const indexNum = (cell, row, enumObject, index) => {
@@ -141,7 +141,7 @@ const UserManagement = () => {
       email: "vijit@gmail.com",
       contacts: "+917905597148",
       region: "mumbai",
-      verification_status: "0"
+      verification_status: "0",
     },
     {
       buyer_name: "vijit",
@@ -149,7 +149,7 @@ const UserManagement = () => {
       email: "vijit@gmail.com",
       contacts: "+917905597148",
       region: "mumbai",
-      verification_status: "1"
+      verification_status: "1",
     },
     {
       buyer_name: "vijit",
@@ -157,8 +157,8 @@ const UserManagement = () => {
       email: "vijit@gmail.com",
       contacts: "+917905597148",
       region: "mumbai",
-      verification_status: "1"
-    }
+      verification_status: "1",
+    },
   ];
   let VendorData = [
     {
@@ -167,7 +167,7 @@ const UserManagement = () => {
       company: "Int",
       region: "mumbai",
       approval_status: "0",
-      verification_status: "0"
+      verification_status: "0",
     },
     {
       buyer_name: "Vendor B",
@@ -175,7 +175,7 @@ const UserManagement = () => {
       company: "Int",
       region: "mumbai",
       approval_status: "0",
-      verification_status: "0"
+      verification_status: "0",
     },
     {
       buyer_name: "Vendor C",
@@ -183,25 +183,25 @@ const UserManagement = () => {
       company: "Int",
       region: "mumbai",
       approval_status: "0",
-      verification_status: "0"
-    }
+      verification_status: "0",
+    },
   ];
   let ModeratorsData = [
     {
       name: "Moderator A",
       email: "vijit@gmail.com",
-      roll: "Roll"
+      roll: "Roll",
     },
     {
       name: "Moderator A",
       email: "vijit@gmail.com",
-      roll: "Roll"
+      roll: "Roll",
     },
     {
       name: "Moderator A",
       email: "vijit@gmail.com",
-      roll: "Roll"
-    }
+      roll: "Roll",
+    },
   ];
 
   return (

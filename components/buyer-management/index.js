@@ -5,10 +5,10 @@ import {
   handleApproveBuyer,
   handleDeleteBuyerProfile,
 } from "@/utils/services/buyer-management";
-import ReactPaginate from "react-paginate";
 import DeleteModal from "../modal/delete-modal";
 import { useRouter } from "next/router";
 import { Field, Form, Formik } from "formik";
+import ReactPaginate from "react-paginate";
 import * as yup from "yup";
 import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { ToastContainer, toast } from "react-toastify";
@@ -20,7 +20,7 @@ const BuyerManagement = () => {
   // const [totalPages, setTotalPages] = useState(1);
   const [showModal, setShowModal] = useState(false);
   const [limit, setlimit] = useState(10);
-  const [page, setpage] = useState(1);
+  const [page, setPage] = useState(1);
   const [totalPages, settotalPages] = useState(null);
   const handleClose = () => setShowModal(false);
   const [filter, setFilter] = useState({
@@ -31,9 +31,15 @@ const BuyerManagement = () => {
 
   const getBuyerList = () => {
     setBuyerData([]);
-    handleGetBuyerList(limit, page, filter.verified, filter.organization, filter.name)
+    handleGetBuyerList(
+      limit,
+      page,
+      filter.verified,
+      filter.organization,
+      filter.name
+    )
       .then((res) => {
-        settotalPages(Math.ceil(res.total_count / limit));
+        settotalPages(res.total_count);
         setBuyerData(res.data);
       })
       .catch((err) => console.log("err", err));
@@ -73,9 +79,15 @@ const BuyerManagement = () => {
 
   const submitHandler = (values) => {
     setFilter(values);
-    setpage(1);
+    setPage(1);
     setBuyerData([]);
-    handleGetBuyerList(limit, 1, values.verified, values.organization, values.name)
+    handleGetBuyerList(
+      limit,
+      1,
+      values.verified,
+      values.organization,
+      values.name
+    )
       .then((res) => {
         setBuyerData(res.data);
         settotalPages(Math.ceil(res.total_count / limit));
@@ -139,7 +151,7 @@ const BuyerManagement = () => {
               }) => (
                 <Form>
                   <div className="row">
-                    <div class="col-2">
+                    {/* <div class="col-2">
                       <Field
                         as="select"
                         name="verified"
@@ -152,7 +164,7 @@ const BuyerManagement = () => {
                         <option value="t">True</option>
                         <option value="f">False</option>
                       </Field>
-                    </div>
+                    </div> */}
 
                     <div class="col-3">
                       <Field
@@ -207,7 +219,7 @@ const BuyerManagement = () => {
                     <th scope="col">Spoc</th>
                     <th scope="col">Email</th>
                     <th scope="col">Contacts</th>
-                    <th scope="col">Region</th>
+                    {/* <th scope="col">Region</th> */}
                     {/* <th scope="col">Approval Status</th> */}
                     <th scope="col">Action</th>
                   </tr>
@@ -220,7 +232,7 @@ const BuyerManagement = () => {
                         <td>{item.organization_name}</td>
                         <td>{item.email}</td>
                         <td>{item.mobile}</td>
-                        <td>{item.country}</td>
+                        {/* <td>{item.country}</td> */}
                         {/* <td>
                           {item.status == 0 ? (
                             <OverlayTrigger
@@ -282,7 +294,7 @@ const BuyerManagement = () => {
                 </tbody>
               </table>
 
-              <nav aria-label="Page navigation example">
+              {/* <nav aria-label="Page navigation example">
                 <ul className="pagination">
                   {Array.from(Array(totalPages), (e, i) => {
                     if (i + 1 === page) {
@@ -318,45 +330,26 @@ const BuyerManagement = () => {
                     }
                   })}
                 </ul>
-              </nav>
+              </nav> */}
+
+              {Math.ceil(totalPages / 10) > 1 && (
+                <ReactPaginate
+                  breakLabel="..."
+                  nextLabel={<i className="fa fa-angle-right"></i>}
+                  onPageChange={handlePageClick}
+                  pageRangeDisplayed={2}
+                  pageCount={Math.ceil(totalPages / 10)}
+                  previousLabel={<i className="fa fa-angle-left"></i>}
+                  renderOnZeroPageCount={null}
+                  className="pagination"
+                />
+              )}
 
               <DeleteModal
                 show={showModal}
                 onHide={handleClose}
                 data={submitDeleteBlog}
               />
-
-              {/* <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                  <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
-                      <span aria-hidden="true">&laquo;</span>
-                      <span class="sr-only">Previous</span>
-                    </a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link" href="#">
-                      1
-                    </a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link" href="#">
-                      2
-                    </a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link" href="#">
-                      3
-                    </a>
-                  </li>
-                  <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
-                      <span aria-hidden="true">&raquo;</span>
-                      <span class="sr-only">Next</span>
-                    </a>
-                  </li>
-                </ul>
-              </nav> */}
             </div>
           </div>
         </div>

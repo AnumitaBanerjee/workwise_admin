@@ -1,6 +1,7 @@
 import { handleDeleteTestimonial, handleGetTestimonialList } from '@/utils/services/testimonial-management';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
+import ReactPaginate from "react-paginate";
 import { ToastContainer, toast } from 'react-toastify'
 import DeleteModal from '../modal/delete-modal';
 
@@ -8,7 +9,7 @@ const TestimonialManagement = () => {
     const router = useRouter();
     const [testimonialList, setTestimonialList] = useState([])
     const [limit, setlimit] = useState(10);
-    const [page, setpage] = useState(1);
+    const [page, setPage] = useState(1);
     const [totalPages, settotalPages] = useState(null);
     const [searchString, setSearchString] = useState('');
     const [showModal, setShowModal] = useState(false);
@@ -17,6 +18,9 @@ const TestimonialManagement = () => {
     const handleDeleteItem = (id) => {
         setShowModal(true);
         setId(id);
+    };
+    const handlePageClick = (e) => {
+        setPage(e.selected + 1);
     };
 
     const handleTestimonialUpdate = (item) => {
@@ -50,7 +54,8 @@ const TestimonialManagement = () => {
     const getTestimonialList = () => {
         handleGetTestimonialList(page, limit, searchString)
             .then((res) => {
-                settotalPages(Math.ceil(res.total_count / limit));
+                // settotalPages(Math.ceil(res.total_count / limit));
+                settotalPages(res.total_count);
                 setTestimonialList(res.data);
             })
             .catch((error) => {
@@ -148,7 +153,8 @@ const TestimonialManagement = () => {
                             }
                         </tbody>
                     </table>
-                    <nav aria-label="Page navigation example">
+
+                    {/* <nav aria-label="Page navigation example">
                         <ul className="pagination">
                             {Array.from(Array(totalPages), (e, i) => {
                                 if (i + 1 === page) {
@@ -184,7 +190,19 @@ const TestimonialManagement = () => {
                                 }
                             })}
                         </ul>
-                    </nav>
+                    </nav> */}
+                    {Math.ceil(totalPages / 10) > 1 && (
+                        <ReactPaginate
+                            breakLabel="..."
+                            nextLabel={<i className="fa fa-angle-right"></i>}
+                            onPageChange={handlePageClick}
+                            pageRangeDisplayed={2}
+                            pageCount={Math.ceil(totalPages / 10)}
+                            previousLabel={<i className="fa fa-angle-left"></i>}
+                            renderOnZeroPageCount={null}
+                            className="pagination"
+                        />
+                    )}
                 </div>
             </section>
             <DeleteModal

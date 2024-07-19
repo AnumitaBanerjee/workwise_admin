@@ -1,4 +1,4 @@
-import EditBanner from "@/components/banner-management/edit-banner";
+import EditBanner from "@/components/faq-management/edit-faq";
 const UpdateBanner = () => {
   return (
     <div>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import ReactPaginate from "react-paginate";
 import { getContactUsPage } from "@/utils/services/contact-us";
 
 const Message = () => {
@@ -52,14 +53,14 @@ const Message = () => {
 
   const [contactData, setContactData] = useState([]);
   const [limit, setlimit] = useState(10);
-  const [page, setpage] = useState(1);
+  const [page, setPage] = useState(1);
   const [totalPages, settotalPages] = useState(null);
-  
+
   const getContactUs = () => {
     setContactData([]);
     getContactUsPage(page, limit)
       .then((res) => {
-        settotalPages(Math.ceil(res.count / limit));
+        settotalPages(res.count);
         res.data.map((item) => (item.isChecked = false));
         setContactData(res.data);
       })
@@ -77,6 +78,9 @@ const Message = () => {
     let formattedDate;
     return formattedDate = date.toDateString();
   }
+  const handlePageClick = (e) => {
+    setPage(e.selected + 1);
+  };
 
   return (
     <>
@@ -144,7 +148,7 @@ const Message = () => {
                 </tbody>
               </table>
 
-              <nav aria-label="Page navigation example">
+              {/* <nav aria-label="Page navigation example">
                 <ul className="pagination">
                   {Array.from(Array(totalPages), (e, i) => {
                     if (i + 1 === page) {
@@ -180,7 +184,19 @@ const Message = () => {
                     }
                   })}
                 </ul>
-              </nav>
+              </nav> */}
+              {Math.ceil(totalPages / 10) > 1 && (
+                <ReactPaginate
+                  breakLabel="..."
+                  nextLabel={<i className="fa fa-angle-right"></i>}
+                  onPageChange={handlePageClick}
+                  pageRangeDisplayed={2}
+                  pageCount={Math.ceil(totalPages / 10)}
+                  previousLabel={<i className="fa fa-angle-left"></i>}
+                  renderOnZeroPageCount={null}
+                  className="pagination"
+                />
+              )}
             </div>
           </div>
         </div>

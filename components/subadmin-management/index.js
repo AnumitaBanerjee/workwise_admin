@@ -4,6 +4,7 @@ import FormikField from "@/components/shared/FormikField";
 import { Form, Formik } from "formik";
 import * as yup from "yup";
 import { ToastContainer, toast } from "react-toastify";
+import ReactPaginate from "react-paginate";
 import { useRouter } from "next/router";
 import DeleteModal from '../modal/delete-modal';
 import { getSubAdminList } from '@/utils/services/subadmin-management';
@@ -13,7 +14,7 @@ const SubadminManagement = () => {
     const router = useRouter();
     const [subAdminList, setSubAdminList] = useState([]);
     const [limit, setlimit] = useState(10);
-    const [page, setpage] = useState(1);
+    const [page, setPage] = useState(1);
     const [totalPages, settotalPages] = useState(null);
     const [showModal, setShowModal] = useState(false);
     const [id, setId] = useState();
@@ -28,7 +29,11 @@ const SubadminManagement = () => {
     const handleSearch = (e) => {
         setSearchString(e.target.value);
     }
-    
+    const handlePageClick = (e) => {
+        setPage(e.selected + 1);
+    };
+
+
     const handleRolePermission = (item) => {
         router.push(`/role-permission/${item.id}`);
     }
@@ -36,7 +41,7 @@ const SubadminManagement = () => {
     const getSubAdmin = () => {
         getSubAdminList(page, limit, searchString)
             .then((res) => {
-                settotalPages(Math.ceil(res.total_count / limit));
+                settotalPages(res.total_count);
                 setSubAdminList(res.data);
             })
             .catch((err) => {
@@ -136,7 +141,7 @@ const SubadminManagement = () => {
                             }
                         </tbody>
                     </table>
-                    <nav aria-label="Page navigation example">
+                    {/* <nav aria-label="Page navigation example">
                         <ul className="pagination">
                             {Array.from(Array(totalPages), (e, i) => {
                                 if (i + 1 === page) {
@@ -172,7 +177,19 @@ const SubadminManagement = () => {
                                 }
                             })}
                         </ul>
-                    </nav>
+                    </nav> */}
+                    {Math.ceil(totalPages / 10) > 1 && (
+                        <ReactPaginate
+                            breakLabel="..."
+                            nextLabel={<i className="fa fa-angle-right"></i>}
+                            onPageChange={handlePageClick}
+                            pageRangeDisplayed={2}
+                            pageCount={Math.ceil(totalPages / 10)}
+                            previousLabel={<i className="fa fa-angle-left"></i>}
+                            renderOnZeroPageCount={null}
+                            className="pagination"
+                        />
+                    )}
                 </div>
             </section>
             <DeleteModal

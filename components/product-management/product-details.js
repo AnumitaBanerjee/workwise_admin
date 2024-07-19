@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 
 const ProductDetails = () => {
     const [productData, setProductData] = useState([])
+    const [vendorData, setVendorData] = useState([])
     const router = useRouter();
     const { id } = router.query;
 
@@ -14,8 +15,8 @@ const ProductDetails = () => {
     const getProductDetails = () => {
         getProducts(id)
             .then((response) => {
-                console.log("response....", response)
                 setProductData([response.data])
+                setVendorData(response.vendor_list)
             })
             .catch((error) => {
                 console.log(error)
@@ -108,7 +109,6 @@ const ProductDetails = () => {
                                                             </ul>
                                                         </div>
                                                     )
-
                                                 })
                                             }
                                         </div>
@@ -146,6 +146,47 @@ const ProductDetails = () => {
                     )
                 })
             }
+            <section className="product-content">
+                <div className="container-fluid">
+                    <div className="row">
+                        <div className="card col-md-12">
+                            <div className="card-header">Vendor List</div>
+                            <div className="product-variants">
+                                <table className="table table-striped table-hover mb-3">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col">Sl. No.</th>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Approved By</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {vendorData &&
+                                            vendorData.length != 0 &&
+                                            vendorData.map((item, index) => {
+                                                return (
+                                                    <tr key={item.id}>
+                                                        <td>{index + 1}</td>
+                                                        <td>{item.vendor_name}</td>
+                                                        <td className="d-flex">{item.vendor_approved_by &&
+                                                            item.vendor_approved_by.length != 0 &&
+                                                            item.vendor_approved_by.map((data, index) => {
+                                                                return (
+                                                                    <div key={index}>
+                                                                        {data.name}{data !== item.vendor_approved_by[item.vendor_approved_by.length - 1] && <span>,&nbsp;</span>}
+                                                                    </div>
+                                                                )
+                                                            })}</td>
+                                                    </tr>
+                                                );
+                                            })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </>
     )
 }

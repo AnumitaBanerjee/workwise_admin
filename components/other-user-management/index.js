@@ -20,7 +20,7 @@ const OtherUserManagement = () => {
   const [pageData, setPageData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [limit, setlimit] = useState(10);
-  const [page, setpage] = useState(1);
+  const [page, setPage] = useState(1);
   const [totalPages, settotalPages] = useState(null);
   const [id, setId] = useState();
   const [filter, setFilter] = useState({
@@ -31,22 +31,22 @@ const OtherUserManagement = () => {
   const router = useRouter();
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [rejectListData, setRejectListData] = useState([]);
-  const [selectedVendorId, setSelectedVendorId] = useState("")
-  const [inputValue, setInputValue] = useState("")
-  const [selectVal, setSelectValue] = useState("")
+  const [selectedVendorId, setSelectedVendorId] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  const [selectVal, setSelectValue] = useState("");
 
   const handleInputDisapprove = (e) => {
     setInputValue(e.target.value);
-  }
+  };
   const handleSelect = (e) => {
     setSelectValue(e.target.value);
-  }
+  };
   const handleCloseRejectModal = () => {
     setShowRejectModal(false);
-    setSelectedVendorId("")
-    setInputValue("")
-    setSelectValue("")
-  }
+    setSelectedVendorId("");
+    setInputValue("");
+    setSelectValue("");
+  };
   const handleClose = () => setShowModal(false);
   const getPageLists = () => {
     setPageData([]);
@@ -58,7 +58,7 @@ const OtherUserManagement = () => {
       filter.name
     )
       .then((res) => {
-        settotalPages(Math.ceil(res.total_count / limit));
+        settotalPages(res.total_count);
         setPageData(res.data);
       })
       .catch((err) => console.log("err", err));
@@ -89,19 +89,19 @@ const OtherUserManagement = () => {
         }
         toast(txt);
       });
-  }
+  };
 
   const openRejectModal = (id) => {
-    setShowRejectModal(true)
-    setSelectedVendorId(id)
-  }
+    setShowRejectModal(true);
+    setSelectedVendorId(id);
+  };
   const submitApproveOtherUser = (id, status) => {
     handleApproveOtherUser(id, status)
       .then((res) => {
         setShowRejectModal(false);
-        setSelectedVendorId("")
-        setInputValue("")
-        setSelectValue("")
+        setSelectedVendorId("");
+        setInputValue("");
+        setSelectValue("");
         toast(res.message);
         getPageLists();
       })
@@ -131,8 +131,14 @@ const OtherUserManagement = () => {
 
   const submitHandler = (values) => {
     setFilter(values);
-    setpage(1);
-    handleGetOtherUserList(limit, 1, values.verified, values.organization, values.name)
+    setPage(1);
+    handleGetOtherUserList(
+      limit,
+      1,
+      values.verified,
+      values.organization,
+      values.name
+    )
       .then((res) => {
         setPageData(res.data);
         settotalPages(Math.ceil(res.total_count / limit));
@@ -158,7 +164,7 @@ const OtherUserManagement = () => {
 
   useEffect(() => {
     getRejectList();
-  }, [])
+  }, []);
 
   return (
     <>
@@ -199,7 +205,7 @@ const OtherUserManagement = () => {
               }) => (
                 <Form>
                   <div className="row">
-                    <div class="col-2">
+                    {/* <div class="col-2">
                       <Field
                         as="select"
                         name="verified"
@@ -212,7 +218,7 @@ const OtherUserManagement = () => {
                         <option value="t">True</option>
                         <option value="f">False</option>
                       </Field>
-                    </div>
+                    </div> */}
 
                     <div class="col-3">
                       <Field
@@ -276,9 +282,9 @@ const OtherUserManagement = () => {
                   <th scope="col">Name</th>
                   <th scope="col">Email</th>
                   <th scope="col">Mobile</th>
-                  <th scope="col">Address</th>
+                  {/* <th scope="col">Address</th>
 
-                  <th scope="col">Nationality</th>
+                  <th scope="col">Nationality</th> */}
                   <th scope="col">Organization</th>
                   <th scope="col">Approval Status</th>
 
@@ -292,9 +298,9 @@ const OtherUserManagement = () => {
                       <td>{item.name}</td>
                       <td>{item.email}</td>
                       <td>{item.mobile}</td>
-                      <td>{item.address}</td>
+                      {/* <td>{item.address}</td>
 
-                      <td>{item.nationality}</td>
+                      <td>{item.nationality}</td> */}
                       <td>{item.organization_name}</td>
                       <td>
                         {item.status == 0 ? (
@@ -302,12 +308,16 @@ const OtherUserManagement = () => {
                             <OverlayTrigger
                               placement="top"
                               overlay={
-                                <Tooltip id="tooltip1">Click to approve</Tooltip>
+                                <Tooltip id="tooltip1">
+                                  Click to approve
+                                </Tooltip>
                               }
                             >
                               <button
                                 className="btn btn-secondary bg-success"
-                                onClick={() => submitApproveOtherUser(item.id, 1)}
+                                onClick={() =>
+                                  submitApproveOtherUser(item.id, 1)
+                                }
                               >
                                 Approve
                               </button>
@@ -347,7 +357,7 @@ const OtherUserManagement = () => {
 
                       <td>
                         <div class="card-footer bg-transparent border-secondary">
-                          <div className="actionStyle">
+                          <div className="actionStyle d-flex">
                             <span
                               className="fa fa-edit mr-3"
                               onClick={() =>
@@ -368,7 +378,8 @@ const OtherUserManagement = () => {
                 })}
               </tbody>
             </table>
-            <nav aria-label="Page navigation example">
+
+            {/* <nav aria-label="Page navigation example">
               <ul className="pagination">
                 {Array.from(Array(totalPages), (e, i) => {
                   if (i + 1 === page) {
@@ -404,7 +415,21 @@ const OtherUserManagement = () => {
                   }
                 })}
               </ul>
-            </nav>
+            </nav> */}
+
+            {Math.ceil(totalPages / 10) > 1 && (
+              <ReactPaginate
+                breakLabel="..."
+                nextLabel={<i className="fa fa-angle-right"></i>}
+                onPageChange={handlePageClick}
+                pageRangeDisplayed={2}
+                pageCount={Math.ceil(totalPages / 10)}
+                previousLabel={<i className="fa fa-angle-left"></i>}
+                renderOnZeroPageCount={null}
+                className="pagination"
+              />
+            )}
+
             <DeleteModal
               show={showModal}
               onHide={handleClose}

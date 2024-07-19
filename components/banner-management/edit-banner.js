@@ -13,7 +13,7 @@ import Link from "next/link";
 import { Editor } from "@tinymce/tinymce-react";
 
 const EditBanner = () => {
-  const router = useRouter();  
+  const router = useRouter();
   const id = router.query.id;
   const [allPageList, setAllPageList] = useState([]);
   const [loading, setloading] = useState(false);
@@ -23,17 +23,16 @@ const EditBanner = () => {
   const [fileType, setFileType] = useState([]);
   const [image, setImage] = useState(null);
   const editorRef = useRef(null);
- 
+
   const [currentBannerDetails, setcurrentBannerDetails] = useState([]);
 
   useEffect(() => {
-    
     if (id) {
       handleGetBanner(id)
         .then((res) => {
           if (res?.data && res?.data?.length > 0) {
             setcurrentBannerDetails(res.data[0]);
-            uploadedImage.current.src = res.data[0].image_url
+            uploadedImage.current.src = res.data[0].image_url;
           }
         })
         .catch((err) => {});
@@ -54,7 +53,7 @@ const EditBanner = () => {
     });
   };
 
-  const submitHandler = (values, resetForm) => {    
+  const submitHandler = (values, resetForm) => {
     var formData = new FormData();
     for (var key in values) {
       if (values.hasOwnProperty(key)) {
@@ -126,17 +125,18 @@ const EditBanner = () => {
                       ? currentBannerDetails.page_id
                       : "",
                     image: "",
-                    status: currentBannerDetails?.status
-                    ? currentBannerDetails.status
-                    : "",
+                    status:
+                      currentBannerDetails?.status !== undefined ||
+                      currentBannerDetails?.status !== null
+                        ? currentBannerDetails.status
+                        : "1",
                     content: currentBannerDetails?.content
-                    ? currentBannerDetails.content
-                    : "",
+                      ? currentBannerDetails.content
+                      : "",
                   }}
                   validationSchema={yup.object().shape({
                     page_id: yup.string().required("Page id is required"),
                     status: yup.string().required("Status id is required"),
-                    
                   })}
                   onSubmit={(values, { resetForm }) => {
                     submitHandler(values, resetForm);

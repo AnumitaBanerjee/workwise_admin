@@ -1,6 +1,7 @@
 import axiosInstance from "../axios";
 import axiosFormData from "../axios/form-data";
 import axiosxdata from "../axios/xxx-form-data";
+import axios from "axios";
 
 function handleGetVendorList(limit = 10, page = 1, verified, organization, name) {
   return new Promise(async (resolve, reject) => {
@@ -19,6 +20,42 @@ function handleGetVendorDetails(id) {
     try {
       let response = await axiosInstance.get(
         `${process.env.NEXT_PUBLIC_API_WEB_URL}/admin/vendor/vendor-details/${id}`
+      );
+      resolve(response);
+    } catch (error) {
+      reject({ error });
+    }
+  });
+}
+function handleGetVendorEditDetails(id) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await axiosInstance.get(
+        `${process.env.NEXT_PUBLIC_API_WEB_URL}/admin/vendor/vendor-edit-details/${id}`
+      );
+      resolve(response);
+    } catch (error) {
+      reject({ error });
+    }
+  });
+}
+function handleGetStates() {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_WEB_URL}/general/states`
+      );
+      resolve(response);
+    } catch (error) {
+      reject({ error });
+    }
+  });
+}
+function handleGetCities(id) {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_WEB_URL}/general/cities/${id}`
       );
       resolve(response);
     } catch (error) {
@@ -67,14 +104,14 @@ status: 0
     }
   });
 }
-function handleUpdateVendor(values, editData) {
+function handleUpdateVendor(values, editDataId) {
   if (values.image == "") {
     delete values.image;
   }
   return new Promise(async (resolve, reject) => {
     try {
       let response = await axiosFormData.put(
-        `${process.env.NEXT_PUBLIC_API_WEB_URL}/admin/vendor/update-vendor/${editData.id}`,
+        `${process.env.NEXT_PUBLIC_API_WEB_URL}/admin/vendor/update-vendor/${editDataId}`,
         values
       );
       resolve(response);
@@ -137,7 +174,10 @@ function handleVendorRfqList(id) {
 export {
   handleGetVendorList,
   handleGetVendorDetails,
+  handleGetVendorEditDetails,
   handleAddVendor,
+  handleGetCities,
+  handleGetStates,
   handleDeleteVendorProfile,
   handleDisableVendorProfile,
   handleUpdateVendor,

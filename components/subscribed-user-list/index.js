@@ -4,8 +4,8 @@ import moment from "moment";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
+import ReactPaginate from "react-paginate";
 import { toast } from "react-toastify";
-// import { BootstrapTable } from "react-bootstrap-table";
 
 const SubscribedUserList = () => {
   const [subscribedUserList, setSubscribeUserList] = useState([]);
@@ -13,7 +13,7 @@ const SubscribedUserList = () => {
   const [searchString, setSearchString] = useState("");
   const [isExport, setIsExport] = useState(false);
   const [limit, setlimit] = useState(10);
-  const [page, setpage] = useState(1);
+  const [page, setPage] = useState(1);
   const [totalPages, settotalPages] = useState(null);
   const [selectedPlan, setSelectedPlan] = useState(null);
   const [userType, setUserType] = useState(null);
@@ -171,6 +171,9 @@ const SubscribedUserList = () => {
         toast.error("Internal server error");
       });
   };
+  const handlePageClick = (e) => {
+    setPage(e.selected + 1);
+  };
 
   const handleSubscribedUsers = () => {
     getSubscribedUserList(
@@ -184,7 +187,8 @@ const SubscribedUserList = () => {
       ""
     )
       .then((res) => {
-        settotalPages(Math.ceil(res.total_count / limit));
+        // settotalPages(Math.ceil(res.total_count / limit));
+        settotalPages(res.total_count);
         setSubscribeUserList(res.data);
       })
       .catch((error) => {
@@ -362,8 +366,8 @@ const SubscribedUserList = () => {
                               {item.user_type === 2
                                 ? "Buyer"
                                 : item.user_type === 4
-                                ? "Other user"
-                                : "Vendor"}
+                                  ? "Other user"
+                                  : "Vendor"}
                             </td>
                             <td>
                               <span className="badge badge-primary">
@@ -407,7 +411,7 @@ const SubscribedUserList = () => {
                       })}
                   </tbody>
                 </table>
-                <nav aria-label="Page navigation example">
+                {/* <nav aria-label="Page navigation example">
                   <ul className="pagination">
                     {Array.from(Array(totalPages), (e, i) => {
                       if (i + 1 === page) {
@@ -443,11 +447,23 @@ const SubscribedUserList = () => {
                       }
                     })}
                   </ul>
-                </nav>
+                </nav> */}
+                {Math.ceil(totalPages / 10) > 1 && (
+                  <ReactPaginate
+                    breakLabel="..."
+                    nextLabel={<i className="fa fa-angle-right"></i>}
+                    onPageChange={handlePageClick}
+                    pageRangeDisplayed={2}
+                    pageCount={Math.ceil(totalPages / 10)}
+                    previousLabel={<i className="fa fa-angle-left"></i>}
+                    renderOnZeroPageCount={null}
+                    className="pagination"
+                  />
+                )}
               </div>
-              <div className="d-flex justify-content-end">
+              {/* <div className="d-flex justify-content-end">
                 <button class="btn btn-primary">View All</button>
-              </div>
+              </div> */}
             </div>
           </div>
           {/* <div className="card card-body">

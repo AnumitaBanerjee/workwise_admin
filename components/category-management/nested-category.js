@@ -1,8 +1,29 @@
-import React from 'react'
-import FullLoading from '../loading/FullLoading';
+import React, { useEffect } from "react";
+import FullLoading from "../loading/FullLoading";
 
 const NestedCategory = (props) => {
-  const { allCategories, listLoading, handleUpdateCategory, handleDeleteCat } = props;
+  const {
+    allCategories,
+    listLoading,
+    handleUpdateCategory,
+    handleDeleteCat,
+    handleAddCategory,
+  } = props;
+
+  useEffect(() => {
+    const accordionElements = document.querySelectorAll(".accordion-collapse");
+    accordionElements.forEach((el) => {
+      new bootstrap.Collapse(el, {
+        toggle: false,
+      });
+    });
+  }, [allCategories]);
+
+  const toggleCollapse = (targetId) => {
+    const targetElement = document.getElementById(targetId);
+    const bsCollapse = bootstrap.Collapse.getInstance(targetElement);
+    bsCollapse.toggle();
+  };
 
   const renderAccordion = (items, parentAccordionId) => {
     return items.map((item) => (
@@ -11,10 +32,7 @@ const NestedCategory = (props) => {
           <button
             className="accordion-button collapsed"
             type="button"
-            data-bs-toggle="collapse"
-            data-bs-target={`#collapse-${item.id}`}
-            aria-expanded="true"
-            aria-controls={`collapse-${item.id}`}
+            onClick={() => toggleCollapse(`collapse-${item.id}`)}
           >
             {item.title}
           </button>
@@ -23,15 +41,16 @@ const NestedCategory = (props) => {
           id={`collapse-${item.id}`}
           className="accordion-collapse collapse"
           aria-labelledby={`heading-${item.id}`}
-          data-bs-parent={`#${parentAccordionId}`}
         >
           <div className="accordion-body">
             <div className="d-flex justify-content-between align-items-start">
               <div>
                 <table className="table table-striped table-hover">
                   <thead>
-                    <th>ID</th>
-                    <th>Slug</th>
+                    <tr>
+                      <th>ID</th>
+                      <th>Slug</th>
+                    </tr>
                   </thead>
                   <tbody>
                     <tr>
@@ -47,12 +66,17 @@ const NestedCategory = (props) => {
                   onClick={() => handleUpdateCategory(item)}
                 ></span>
                 <span
-                  className="fa fa-trash"
+                  className="fa fa-trash mr-3"
                   onClick={(e) => handleDeleteCat(e, item)}
+                ></span>
+                <span
+                  className="fa fa-plus"
+                  onClick={(e) => handleAddCategory(item)}
                 ></span>
               </div>
             </div>
-            {item.children && renderAccordion(item.children, `nested-accordion-${item.id}`)}
+            {item.children &&
+              renderAccordion(item.children, `nested-accordion-${item.id}`)}
           </div>
         </div>
       </div>
@@ -65,14 +89,13 @@ const NestedCategory = (props) => {
 
   return (
     <div className="accordion w-100" id="nested-accordion">
-      {allCategories?.map((item, idx) => (
+      {allCategories?.map((item) => (
         <div key={item.id} className="accordion-item">
           <h2 className="accordion-header" id={`heading-${item.id}`}>
             <button
               className="accordion-button collapsed"
               type="button"
-              data-bs-toggle="collapse"
-              data-bs-target={`#collapse-${item.id}`}
+              onClick={() => toggleCollapse(`collapse-${item.id}`)}
             >
               {`${item.title}`}
             </button>
@@ -81,15 +104,16 @@ const NestedCategory = (props) => {
             id={`collapse-${item.id}`}
             className="accordion-collapse collapse"
             aria-labelledby={`heading-${item.id}`}
-            data-bs-parent="#nested-accordion"
           >
             <div className="accordion-body">
               <div className="d-flex justify-content-between align-items-start">
                 <div>
                   <table className="table table-striped table-hover">
                     <thead>
-                      <th>ID</th>
-                      <th>Slug</th>
+                      <tr>
+                        <th>ID</th>
+                        <th>Slug</th>
+                      </tr>
                     </thead>
                     <tbody>
                       <tr>
@@ -112,7 +136,10 @@ const NestedCategory = (props) => {
               </div>
               {item.children && (
                 <div className="accordion" id={`nested-accordion-${item.id}`}>
-                  {renderAccordion(item.children, `nested-accordion-${item.id}`)}
+                  {renderAccordion(
+                    item.children,
+                    `nested-accordion-${item.id}`
+                  )}
                 </div>
               )}
             </div>
@@ -123,4 +150,4 @@ const NestedCategory = (props) => {
   );
 };
 
-export default NestedCategory
+export default NestedCategory;

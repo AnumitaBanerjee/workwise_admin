@@ -5,7 +5,7 @@ import {
   createCategory,
   deleteCategory,
   getCategories,
-  updateCategory
+  updateCategory,
 } from "@/utils/services/product-management";
 import { Form, Formik, Field } from "formik";
 import * as yup from "yup";
@@ -16,27 +16,67 @@ import NestedCategory from "./nested-category";
 const CategoryManagementPage = () => {
   const navigate = useRouter();
   const [allCategories, setAllCategories] = useState([]);
+  const [addCategories, setAddCategories] = useState([]);
   const [loading, setloading] = useState(false);
   const [listLoading, setlistLoading] = useState(false);
   const [updateStatus, setUpdateStatus] = useState(false);
   const [updateData, setUpdateData] = useState("");
+  const [addStatus, setAddStatus] = useState(false);
   const router = useRouter();
   const formRef = useRef(null);
   useEffect(() => {
     getAllCategories();
   }, []);
 
+  const buildTree = async (data) => {
+    const map = {};
+    const roots = [];
+
+    // Initialize the map
+    data.forEach((item) => {
+      map[item.id] = { ...item, children: [] };
+    });
+
+    // Build the tree
+    data.forEach((item) => {
+      if (item.parent_id !== 0) {
+        if (map[item.parent_id]) {
+          map[item.parent_id].children.push(map[item.id]);
+        }
+      } else {
+        roots.push(map[item.id]);
+      }
+    });
+
+    return roots;
+  };
+
   const getAllCategories = () => {
     setloading(true);
     setlistLoading(true);
-    getCategories(1, 1000).then((res) => {
+    getCategories(1, 1000).then(async (res) => {
       setloading(false);
       setlistLoading(false);
-      const transformedCategory = res?.data?.filter(obj => obj.parent_id === 0 && obj.title !== null)
-        .map(parent => ({
-          ...parent,
-          children: res?.data?.filter(child => child.parent_id === parent.id)
-        }));
+      let transformedCategory = await buildTree(res?.data);
+
+      console.log(transformedCategory);
+
+      /* console.log(
+        res?.data?.reduce(
+          (acc, item) => (
+            (item.children = []),
+            (acc[item.id] = item),
+            item.parent_id
+              ? (
+                  acc[item.parent_id] ||
+                  (acc[item.parent_id] = { children: [] })
+                ).children.push(item)
+              : acc.roots.push(item),
+            acc
+          ),
+          { roots: [] }
+        ).roots
+      ); */
       setAllCategories(transformedCategory);
     });
   };
@@ -64,8 +104,10 @@ const CategoryManagementPage = () => {
     } else {
       createCategory(values).then((res) => {
         setloading(false);
+        setAddStatus(false);
         resetForm();
         getAllCategories();
+        setAddCategories([]);
       });
     }
   };
@@ -120,9 +162,11 @@ const CategoryManagementPage = () => {
     );
   };
   const handleUpdateCategory = (item) => {
+    setAddStatus(false);
+    setAddCategories([]);
     setUpdateStatus(true);
     setUpdateData(item);
-    formRef.current.scrollIntoView({ behavior: 'smooth' });
+    formRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
   const getChildCat = (item) => {
@@ -183,9 +227,18 @@ const CategoryManagementPage = () => {
     e.preventDefault();
     setlistLoading(true);
     deleteCategory(item.id).then((res) => {
+      toast(res?.message);
       setlistLoading(false);
       getAllCategories();
     });
+  };
+  const handleAddCategory = (item) => {
+    // console.log("item", item);
+    setUpdateStatus(false);
+    setUpdateData("");
+    setAddStatus(true);
+    setAddCategories([{ id: item.id, title: item.title, is_deleted: 0 }]);
+    formRef.current.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -200,7 +253,10 @@ const CategoryManagementPage = () => {
 
       <section className="content">
         <div className="container-fluid">
-          <div className="d-flex justify-content-start align-items-start w-100" ref={formRef}>
+          <div
+            className="d-flex justify-content-start align-items-start w-100"
+            ref={formRef}
+          >
             <div className="col-md-4">
               <div className="card">
                 <div className="card-header">
@@ -213,8 +269,12 @@ const CategoryManagementPage = () => {
                     initialValues={{
                       title: updateStatus ? updateData?.title : "",
                       slug: updateStatus ? updateData?.slug : "",
-                      parent_id: updateStatus ? updateData?.parent_id : "0",
-                      status: updateStatus ? updateData?.status : "1"
+                      parent_id: updateStatus
+                        ? updateData?.parent_id
+                        : addStatus
+                        ? addCategories[0]?.id
+                        : "0",
+                      status: updateStatus ? updateData?.status : "1",
                     }}
                     validationSchema={yup.object().shape({
                       title: yup
@@ -222,9 +282,12 @@ const CategoryManagementPage = () => {
                         .required("Category title is required!"),
                       slug: yup.string().required("Slug is required"),
                       parent_id: yup.string().required("Parent is required"),
-                      status: yup.string().required("Status is required")
+                      status: yup.string().required("Status is required"),
                     })}
                     onSubmit={(values, { resetForm }) => {
+                      if (addStatus) {
+                        values.parent_id = values.parent_id.toString();
+                      }
                       handleSubmit(values, resetForm);
                     }}
                   >
@@ -259,30 +322,45 @@ const CategoryManagementPage = () => {
                           )}
                         </div>
 
-                        <div className="form-group has-feedback">
-                          <label htmlFor="parent_id">Parent Category *</label>
-                          <Field
-                            as="select"
-                            name="parent_id"
-                            className="form-control"
-                            id="parent_id"
-                          >
-                            <option value="0">No parent</option>
-                            {allCategories &&
-                              allCategories.map((item) => {
-                                if (item.is_deleted == 0) {
-                                  return (
-                                    <option value={`${item?.id}`}>
-                                      {item?.title}
-                                    </option>
-                                  );
-                                }
-                              })}
-                          </Field>
-                          {touched.parent_id && errors.parent_id && (
-                            <div className="form-error">{errors.parent_id}</div>
-                          )}
-                        </div>
+                        {!updateStatus && (
+                          <div className="form-group has-feedback">
+                            <label htmlFor="parent_id">Parent Category *</label>
+                            <Field
+                              as="select"
+                              name="parent_id"
+                              className="form-control"
+                              id="parent_id"
+                            >
+                              <option value="0">No parent</option>
+                              {allCategories &&
+                                !addStatus &&
+                                allCategories.map((item) => {
+                                  if (item.is_deleted == 0) {
+                                    return (
+                                      <option value={`${item?.id}`}>
+                                        {item?.title}
+                                      </option>
+                                    );
+                                  }
+                                })}
+                              {addStatus &&
+                                addCategories.map((item) => {
+                                  if (item.is_deleted == 0) {
+                                    return (
+                                      <option value={`${item?.id}`}>
+                                        {item?.title}
+                                      </option>
+                                    );
+                                  }
+                                })}
+                            </Field>
+                            {touched.parent_id && errors.parent_id && (
+                              <div className="form-error">
+                                {errors.parent_id}
+                              </div>
+                            )}
+                          </div>
+                        )}
 
                         <div className="row">
                           <div className="col-4">
@@ -303,9 +381,26 @@ const CategoryManagementPage = () => {
                                 onClick={() => {
                                   setUpdateData("");
                                   setUpdateStatus(false);
+                                  setAddStatus(false);
                                 }}
                               >
                                 Cancel Edit
+                              </button>
+                            </div>
+                          )}
+                          {addStatus && (
+                            <div className="col-4 ml-4">
+                              <button
+                                type="button"
+                                className="btn btn-danger btn-block btn-flat create-cat"
+                                onClick={() => {
+                                  setAddStatus(false);
+                                  setAddCategories([]);
+                                  setUpdateData("");
+                                  setUpdateStatus(false);
+                                }}
+                              >
+                                Cancel Create
                               </button>
                             </div>
                           )}
@@ -322,6 +417,7 @@ const CategoryManagementPage = () => {
               listLoading={listLoading}
               handleUpdateCategory={handleUpdateCategory}
               handleDeleteCat={handleDeleteCat}
+              handleAddCategory={handleAddCategory}
             />
           </div>
           <ToastContainer />

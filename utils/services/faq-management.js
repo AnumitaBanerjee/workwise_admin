@@ -80,6 +80,44 @@ const handleGetBanner = (id) => {
     }
   });
 };
+const handleGetFaq = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await axiosInstance.get(
+        `${process.env.NEXT_PUBLIC_API_WEB_URL}/admin/cms/faq-detail/${id}`
+      );
+      resolve(response);
+    } catch (error) {
+      reject({ error });
+    }
+  });
+};
+const handleUpdateFaq = (values, id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await axiosInstance.put(
+        `${process.env.NEXT_PUBLIC_API_WEB_URL}/admin/cms/update-faq/${id}`,
+        values
+      );
+      resolve(response);
+    } catch (error) {
+      reject({ error });
+    }
+  });
+};
+
+const handleDeleteFaq = (id) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      let response = await axiosFormData.delete(
+        `${process.env.NEXT_PUBLIC_API_WEB_URL}/admin/cms/delete-faq/${id}`
+      );
+      resolve(response);
+    } catch (error) {
+      reject({ error });
+    }
+  });
+};
 
 const getPageList = () => {
   return new Promise(async (resolve, reject) => {
@@ -172,4 +210,7 @@ export {
   handleDeleteBanner,
   handleGetFaqList,
   handleAddFaq,
+  handleGetFaq,
+  handleUpdateFaq,
+  handleDeleteFaq,
 };
