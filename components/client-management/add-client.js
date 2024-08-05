@@ -21,11 +21,13 @@ const AddBlog = () => {
   const initialValues = {
     name: "",
     Status: "",
+    show_in_website: "",
   };
 
   const validationSchema = yup.object().shape({
     name: yup.string().required("Name is required"),
     status: yup.string().required("Status is required"),
+    show_in_website: yup.string().required("Show in Website is required"),
   });
 
   const getBlogCategory = () => {
@@ -54,6 +56,7 @@ const AddBlog = () => {
     payload.append(`status`, values.status);
     payload.append(`logo`, selectedFiles[0]);
     payload.append(`tds`, selectedFilesTds[0]);
+    payload.append(`show_in_website`, values.show_in_website);
     // payload.append(`qap`, selectedFilesQap[0]);
     /* selectedFiles.forEach((file, i) => {
       payload.append(`logo`, file, file.logo);
@@ -214,6 +217,27 @@ const AddBlog = () => {
                                     { label: "Inactive", value: "0" },
                                   ]}
                                   name="status"
+                                  touched={touched}
+                                  errors={errors}
+                                />
+                              </div>
+                            </div>
+                            <div className="col-sm-4">
+                              <div className="form-group">
+                                <FormikField
+                                  label="Select Show Website"
+                                  type="select"
+                                  isRequired={true}
+                                  selectOptions={[
+                                    {
+                                      label: "Select Show Website",
+                                      value: "",
+                                      disabled: false,
+                                    },
+                                    { label: "Yes", value: "1" },
+                                    { label: "No", value: "0" },
+                                  ]}
+                                  name="show_in_website"
                                   touched={touched}
                                   errors={errors}
                                 />

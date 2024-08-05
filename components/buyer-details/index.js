@@ -11,7 +11,11 @@ import {
   handleDeleteVendorProfile,
   handleDisableVendorProfile,
 } from "@/utils/services/vendor-management";
-import { handleGetBuyerDetails, handleGetBuyerRfqList, handleGetSubscriptionDetails } from "../../utils/services/buyer-management";
+import {
+  handleGetBuyerDetails,
+  handleGetBuyerRfqList,
+  handleGetSubscriptionDetails,
+} from "../../utils/services/buyer-management";
 import moment from "moment";
 const BuyersDetails = () => {
   const router = useRouter();
@@ -61,7 +65,7 @@ const BuyersDetails = () => {
         }
         toast.error(txt);
       });
-  }
+  };
 
   const getBuyerSubscriptionList = () => {
     handleGetSubscriptionDetails(id)
@@ -73,7 +77,7 @@ const BuyersDetails = () => {
         }
         toast.error(txt);
       });
-  }
+  };
 
   const submitDisableModal = () => {
     handleDisableVendorProfile(id)
@@ -108,11 +112,11 @@ const BuyersDetails = () => {
   };
 
   useEffect(() => {
-    if(id){
+    if (id) {
       getBuyerRfqList();
       getBuyerSubscriptionList();
     }
-  },[id, page])
+  }, [id, page]);
   return (
     <>
       <div className="content-header">
@@ -149,7 +153,7 @@ const BuyersDetails = () => {
                   EDIT
                 </button>
               </li> */}
-              <li className="mr-4">
+              {/* <li className="mr-4">
                 <button type="button" class="btn btn-warning">
                   DISABLE PROFILE
                 </button>
@@ -158,7 +162,7 @@ const BuyersDetails = () => {
                 <button type="button" class="btn btn-danger">
                   DELETE PROFILE
                 </button>
-              </li>
+              </li> */}
             </ol>
           </div>
           <div className="d-flex justify-content w-100">
@@ -188,14 +192,14 @@ const BuyersDetails = () => {
                 </div>
               </div>
             </div>
-            <div className="card col-6">
-              <div className="card-header">SPOC Details</div>
+            {/* <div className="card col-6">
+              <div className="card-header">Organization Details</div>
               <ul className="list-group list-group-flush">
-                <li className="list-group-item">Cras justo odio</li>
-                <li className="list-group-item">Dapibus ac facilisis in</li>
-                <li className="list-group-item">Vestibulum at eros</li>
+                <li className="list-group-item">
+                  Organization Name: {vendorDeails?.organization_name}
+                </li>
               </ul>
-            </div>
+            </div> */}
           </div>
           {/* <div className="d-flex">
             <div className="card col-7 mr-5">
@@ -248,9 +252,21 @@ const BuyersDetails = () => {
                       <tr>
                         <td>{buyerSubscriptionList?.user_id}</td>
                         <td>{buyerSubscriptionList?.plan_name}</td>
-                        <td>{buyerSubscriptionList?.status === 1 ? 'Active' : 'In-Active'}</td>
-                        <td>{moment(buyerSubscriptionList?.start_date)?.format("MM/DD/YYYY")}</td>
-                        <td>{moment(buyerSubscriptionList?.renew_date)?.format("MM/DD/YYYY")}</td>
+                        <td>
+                          {buyerSubscriptionList?.status === 1
+                            ? "Active"
+                            : "In-Active"}
+                        </td>
+                        <td>
+                          {moment(buyerSubscriptionList?.start_date)?.format(
+                            "MM/DD/YYYY"
+                          )}
+                        </td>
+                        <td>
+                          {moment(buyerSubscriptionList?.renew_date)?.format(
+                            "MM/DD/YYYY"
+                          )}
+                        </td>
                         <td>invoice</td>
                       </tr>
                     </tbody>
@@ -279,8 +295,8 @@ const BuyersDetails = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {
-                        buyerRfqList && buyerRfqList?.map((item) => {
+                      {buyerRfqList &&
+                        buyerRfqList?.map((item) => {
                           return (
                             <tr key={item?.id}>
                               <td>{item?.contact_name}</td>
@@ -290,9 +306,8 @@ const BuyersDetails = () => {
                               <td>{item?.response_email}</td>
                               <td>{item?.bid_end_date}</td>
                             </tr>
-                          )
-                        })
-                      }
+                          );
+                        })}
                     </tbody>
                   </table>
                   <nav aria-label="Page navigation example">

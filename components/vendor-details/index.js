@@ -7,6 +7,7 @@ import {
   handleDisableVendorProfile,
   handleGetVendorDetails,
   handleVendorRfqList,
+  handleApproveVendor,
 } from "@/utils/services/vendor-management";
 import { useRouter } from "next/router";
 import { ToastContainer, toast } from "react-toastify";
@@ -21,13 +22,41 @@ const VendorDetails = () => {
   const [vendorRfqList, setVendorRfqList] = useState([]);
   const handleClose = () => {
     setShowModal(false);
-    setShowDisableModal(false);
+    // setShowDisableModal(false);
   };
   useEffect(() => {
     getVendorDetails();
   }, [id]);
   const handleDeleteBudget = (id) => {
     setShowModal(true);
+  };
+
+  const submitApproveVendor = (id, status) => {
+    handleApproveVendor(id, status)
+      .then((res) => {
+        console.log(
+          "success=================================================>",
+          res
+        );
+        // setShowRejectModal(false);
+        // setSelectedVendorId("");
+        // setInputValue("");
+        // setSelectValue("");
+        toast.success(res.message);
+        getVendorDetails();
+      })
+      .catch((error) => {
+        console.log(
+          "error=================================================>",
+          error
+        );
+        // let txt = "";
+        // for (let x in error.error.response.data.errors) {
+        //   txt = error.error.response.data.errors[x];
+        // }
+        // toast.error(txt);
+      });
+    setTimeout(handleClose(), 10000);
   };
 
   const getVendorRfqList = () => {
@@ -81,6 +110,7 @@ const VendorDetails = () => {
       })
       .catch((error) => {
         let txt = "";
+
         for (let x in error.error.response.data.errors) {
           txt = error.error.response.data.errors[x];
         }
@@ -122,7 +152,7 @@ const VendorDetails = () => {
               <h5 className="heading-container">Vendor Profile </h5>
             </ol>
             <ol className="breadcrumb float-sm-right">
-              <li className="mr-4">
+              {/*  <li className="mr-4">
                 <button
                   type="button"
                   class="btn btn-warning"
@@ -132,7 +162,28 @@ const VendorDetails = () => {
                     ? "DISABLE PROFILE"
                     : "ENABLE PROFILE"}
                 </button>
-              </li>
+              </li> */}
+              {vendorDeails?.status == 1 ? (
+                <li className="mr-4">
+                  <button
+                    type="button"
+                    class="btn btn-warning"
+                    onClick={() => submitApproveVendor(id, 0)}
+                  >
+                    DISABLE PROFILE
+                  </button>
+                </li>
+              ) : (
+                <li className="mr-4">
+                  <button
+                    type="button"
+                    class="btn btn-warning"
+                    onClick={() => submitApproveVendor(id, 1)}
+                  >
+                    ENABLE PROFILE
+                  </button>
+                </li>
+              )}
               <li className="mr-4">
                 <button
                   type="button"
@@ -179,7 +230,7 @@ const VendorDetails = () => {
               <div className="card-header">Company Information</div>
               <ul className="list-group list-group-flush">
                 <li className="list-group-item">
-                  Company Name- {vendorDeails?.organization_name}
+                  Company Name- {vendorDeails?.name}
                 </li>
                 <li className="list-group-item">
                   Nature of business- {vendorDeails?.nature_of_business}
@@ -426,6 +477,7 @@ const VendorDetails = () => {
           show={showDisableModal}
           onHide={handleClose}
           data={submitDisableModal}
+          submitApproveVendor={submitApproveVendor}
         />
         <ToastContainer />
       </section>

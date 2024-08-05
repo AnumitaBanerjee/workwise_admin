@@ -27,6 +27,7 @@ const EditBlog = () => {
   const initialValues = {
     name: selectedBlogData ? selectedBlogData?.vendor_approve : "",
     status: selectedBlogData ? selectedBlogData?.status : "",
+    show_in_website: selectedBlogData ? selectedBlogData?.show_in_website : "",
   };
 
   const getBlogsDetail = () => {
@@ -48,6 +49,7 @@ const EditBlog = () => {
   const validationSchema = yup.object().shape({
     name: yup.string().required("Name is required"),
     status: yup.string().required("Status is required"),
+    show_in_website: yup.string().required("Show in website is required"),
     // tds: yup.string().required("tds is required"),
     // name: yup.string().required("Name is required"),
     // name: yup.string().required("Name is required"),
@@ -57,6 +59,7 @@ const EditBlog = () => {
     const payload = new FormData();
     payload.append(`name`, values.name);
     payload.append(`status`, values.status);
+    payload.append(`show_in_website`, values.show_in_website);
     payload.append(`logo`, selectedFiles[0]);
     payload.append(`tds`, selectedFilesTds[0]);
     // payload.append(`qap`, selectedFilesQap[0]);
@@ -200,16 +203,22 @@ const EditBlog = () => {
                                   errors={errors}
                                 />
                               </div>
+
                               {selectedFilesTds?.length === 0 &&
                                 selectedBlogData && (
                                   <div className="mb-4">
-                                    <i
-                                      class="fa fa-file-pdf-o"
-                                      style={{
-                                        color: "red",
-                                        fontSize: "31px",
-                                      }}
-                                    ></i>
+                                    <a
+                                      href={selectedBlogData?.datasheet_file}
+                                      target="_blank"
+                                    >
+                                      <i
+                                        class="fa fa-file-pdf-o"
+                                        style={{
+                                          color: "red",
+                                          fontSize: "31px",
+                                        }}
+                                      ></i>
+                                    </a>
                                   </div>
                                 )}
                             </div>
@@ -258,6 +267,27 @@ const EditBlog = () => {
                                     { label: "Inactive", value: "0" },
                                   ]}
                                   name="status"
+                                  touched={touched}
+                                  errors={errors}
+                                />
+                              </div>
+                            </div>
+                            <div className="col-sm-4">
+                              <div className="form-group">
+                                <FormikField
+                                  label="Select Show Website"
+                                  type="select"
+                                  isRequired={true}
+                                  selectOptions={[
+                                    {
+                                      label: "Select Show Website",
+                                      value: "",
+                                      disabled: true,
+                                    },
+                                    { label: "Yes", value: "1" },
+                                    { label: "No", value: "0" },
+                                  ]}
+                                  name="show_in_website"
                                   touched={touched}
                                   errors={errors}
                                 />

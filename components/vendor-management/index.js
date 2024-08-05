@@ -318,18 +318,6 @@ const VendorManagement = () => {
                                 Approve
                               </button>
                             </OverlayTrigger>
-
-                            {/* {item?.status === 0 && item?.reject_reason &&
-                              <OverlayTrigger
-                                placement="top"
-                                overlay={
-                                  <Tooltip id="tooltip1">
-                                    {item?.reject_reason}
-                                  </Tooltip>
-                                }
-                              >
-                                <span className="fa fa-info-circle ml-2"></span>
-                              </OverlayTrigger>} */}
                           </div>
                         ) : (
                           <OverlayTrigger

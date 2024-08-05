@@ -34,7 +34,7 @@ const Header = (props) => {
       <h4 className="header-route">{routeName}</h4>
       <ul className="navbar-nav ml-auto">
         <li className="nav-item dropdown">
-          <Link
+          {/* <Link
             href="#"
             className="nav-link"
             data-bs-toggle="dropdown"
@@ -45,8 +45,7 @@ const Header = (props) => {
               icon={faBell}
               className="fa-solid fa-bell"
             ></FontAwesomeIcon>
-            {/* <i class="fa-solid fa-bell"></i> */}
-          </Link>
+          </Link> */}
 
           <div
             onClick={() => handleDropDown(1)}
@@ -78,7 +77,7 @@ const Header = (props) => {
           </div>
         </li>
         <li className="nav-item dropdown">
-          <Link
+          {/* <Link
             href="#"
             className="nav-link"
             data-bs-toggle="dropdown"
@@ -89,8 +88,7 @@ const Header = (props) => {
               icon={faGear}
               className="fa-solid fa-gear"
             ></FontAwesomeIcon>
-            {/* <i class="fa-solid fa-gear"></i> */}
-          </Link>
+          </Link> */}
           <div
             onClick={() => handleDropDown(2)}
             className={`dropdown-menu dropdown-menu-lg dropdown-menu-right ${

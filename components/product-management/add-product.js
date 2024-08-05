@@ -46,6 +46,7 @@ const AddProduct = () => {
 	const [levelSixCatSelected, setlevelSixCatSelected] = useState("");
 	const [mainLoading, setMainLoading] = useState(false);
 	const [vendorData, setVendorData] = useState([]);
+
 	const router = useRouter();
 
 	const isFeaturesArray = [

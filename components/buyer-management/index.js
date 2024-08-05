@@ -171,7 +171,7 @@ const BuyerManagement = () => {
                         type="text"
                         name="organization"
                         class="form-control"
-                        placeholder="Search organization"
+                        placeholder="Search by organization"
                       />
                     </div>
 
@@ -180,7 +180,7 @@ const BuyerManagement = () => {
                         type="text"
                         name="name"
                         class="form-control"
-                        placeholder="Search name"
+                        placeholder="Search by buyer name"
                       />
                     </div>
                     <div className="col-2 d-flex flex-column">
@@ -216,7 +216,7 @@ const BuyerManagement = () => {
                 <thead>
                   <tr>
                     <th scope="col">Buyer Name</th>
-                    <th scope="col">Spoc</th>
+                    <th scope="col">Organization</th>
                     <th scope="col">Email</th>
                     <th scope="col">Contacts</th>
                     {/* <th scope="col">Region</th> */}
